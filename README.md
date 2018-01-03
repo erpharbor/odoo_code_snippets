@@ -12,3 +12,11 @@ There are following snippets:
 - API
 - ORM methods
 
+Contact
+-------
+contact@erpharbor.com
+
+Website
+-------
+http://www.erpharbor.com
+
