@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<templates>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Odoo Manifest" enabled="true" name="manifest"># -*- coding: utf-8 -*-
+{
+    'name': 'Module Name',
+    'summary': 'Summary of the module',
+    'author': 'ERP Harbor Consulting Services',
+    'website': 'www.erpharbor.com',
+    'category': '',
+    'version': '10.0.0.1',
+    'depends': [
+        'base',
+    ],
+    'data': [
+    ],
+    'demo': [
+    ],
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+}
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Odoo Imports" enabled="true" name="odoo_imports">from odoo import api, fields, models, _</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Odoo Model" enabled="true" name="odoo_model"># -*- coding: utf-8 -*-
+from odoo import api, fields, models, _
+
+
+class ModelModel(models.Model):
+    _name = 'model.model'
+    _description = 'Model Model'
+
+    name = fields.Char('Name', required=False, readonly=False)
+    price = fields.Float('Price', required=False, readonly=False)
+    qty = fields.Float('Qty', required=False, readonly=False)
+    state = fields.Selection([('draft', 'Draft'), ('confirmed', 'Confirm'), ('done', 'Done')], 'State', readonly=True)
+    subtotal = fields.Float(compute='_calc_total', string='Subtotal', store=False)
+    rec_id = fields.Many2one('object.object')
+
+    @api.depends('qty', 'price')
+    def _calc_total(self):
+        for rec in self:
+            rec.subtotal = rec.qty * rec.price
+
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Create with API" enabled="true" name="create_api">@api.model
+def create(self, vals):
+    # Do something with vals before record creation
+    res = super(ModelName, self).create(vals)
+    # # Do something after record creation
+    return res
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Write with API" enabled="true" name="write_api">@api.multi
+def write(self, vals):
+    # Do something with vals before record updation
+    res = super(ModelName, self).write(vals)
+    # Your logic goes here
+    return res
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Read with API" enabled="true" name="read_api">@api.multi
+def read(self, fields=None, load='_classic_read'):
+    res = super(ModelName, self).read(fields)
+    # Your logic goes here
+    return res
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="NameGet with API" enabled="true" name="name_get_api">@api.multi
+def name_get(self, cr, uid, ids, context=None):
+    res = []
+    for rec in self:
+        # Concatenate two or more char fields in name
+        # name = "[" + rec.code + "] " + rec.name
+        res.append((rec.id, name))
+        # Make a list like [(id, name), (id, name), ...]
+    return res
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="NameSearch with API" enabled="true" name="name_search_api">@api.model
+def name_search(self, name, args=None, operator='ilike', limit=80):
+    if not args:
+        args = []
+    if name:
+        recs = self.search([('code', 'ilike', name)] + args, limit=limit)
+        if not recs:
+            recs = self.search([('name', operator, name)] + args, limit=limit)
+        if recs:
+            return recs.name_get(ids)
+    return super(ModelName, self).name_search(name, args=args, operator=operator, limit=limit)
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Search with API" enabled="true" name="search_api">@api.model
+def search(self, args, offset=0, limit=None, order=None, count=False):
+    # Do something with args
+    res = super(ModelName, self).search(args, offset=offset, limit=limit, order=order, count=count)
+    # Your logic goes here
+    return res
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Copy with API" enabled="true" name="copy_api">@api.one
+def copy(self, default=None):
+    # Do something with default dictionary
+    default = dict(default or {})
+    default.update({'code': self.code or ''})
+    return super(ModelName, self).copy(default)
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Unlink with API" enabled="true" name="unlink_api">@api.multi
+def unlink(self):
+    # Do something before delete
+    res = super(ModelName, self).unlink()
+    # Do something after delete
+    return res
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Onchange with API" enabled="true" name="onchange_api">@api.onchange('field1')
+def onchange_field1(self):
+    self.another_field = self.field1
+#    return {'domain': {'field1': [('field', 'operator', 'value')]}}
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Constrains with API" enabled="true" name="constrains_api">from odoo.exceptions import UserError, ValidationError
+
+@api.one
+@api.constrains('amount')
+def _check_amount(self):
+    if self.amount == 0: # write your condition here
+        raise ValidationError(_('A transaction can\'t have 0 amount.'))
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Fields View Get" enabled="true" name="fields_view_get">
+@api.model
+def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    from lxml import etree
+    import json
+    result = super(class_name, self).fields_view_get(view_id, view_type, toolbar=toolbar, submenu=submenu)
+    if view_type == 'form':
+        doc = etree.XML(result['arch'])
+        for node in doc.xpath("//field[@name='field_name']"):
+	    # Add attrs
+            modifiers = json.loads(node.get("modifiers", '{}'))
+            modifiers.update({'invisible': [('field', 'operator', 'value')]})
+            node.set("modifiers", json.dumps(modifiers))
+            result['arch'] = etree.tostring(doc)
+    return result
+</template>
+<template autoinsert="true" context="org.python.pydev.editor.templates.python" deleted="false" description="Default Get" enabled="true" name="default_get">
+@api.model
+def default_get(self, fields_list):
+    res = super(class_name, self).default_get(fields_list)
+    res.update({'field_name': 'value'})
+    # Add default values in res
+    return res
+</template>
+</templates>
