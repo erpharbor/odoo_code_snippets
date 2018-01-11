@@ -7,7 +7,7 @@ There are following snippets:
 
 - MANIFEST
 - IMPORTS
-- MODAL CREATION
+- MODEL CREATION
 - FIELDS
 - API
 - ORM methods
